@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Bem-vindo, {{ request.user.username }}!</h1>
+    
+    {% if request.user.is_authenticated %}
+        <p>Você está logado como {{ request.user.username }}.</p>
+        <ul>
+            <li><a href="{% url 'task_list' %}">Ver Tarefas</a></li>
+            <li><a href="{% url 'task_new' %}">Criar Nova Tarefa</a></li>
+            <li><a href="{% url 'user_list' %}">Lista de Usuários</a></li>
+            <li>
+                <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Sair</button>
+            </form>
+            </li>
+        </ul>
+    {% else %}
+        <p>Você não está logado.</p>
+        <a href="{% url 'login' %}">Fazer Login</a>
+    {% endif %}
+</body>
+</html>

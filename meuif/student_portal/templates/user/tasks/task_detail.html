@@ -1,0 +1,9 @@
+<h2>{{ task.name }}</h2>
+<p>Usuário: {{ task.user }}</p>
+<p>Score: {{ task.score }} / {{ task.max_score }}</p>
+<p>Peso: {{ task.weight }}</p>
+<p>Deadline: {{ task.deadline }}</p>
+<p>Criada em: {{ task.created_date }}</p>
+
+<a href="{% url 'task_edit' task.pk %}">Editar</a>
+<a href="{% url 'task_list' %}">Voltar</a>
