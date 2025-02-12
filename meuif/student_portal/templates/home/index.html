@@ -16,14 +16,15 @@
             <li><a href="{% url 'user_list' %}">Lista de Usuários</a></li>
             <li>
                 <form method="POST" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">Sair</button>
-            </form>
+                    {% csrf_token %}
+                    <button type="submit">Sair</button>
+                </form>
             </li>
         </ul>
     {% else %}
         <p>Você não está logado.</p>
-        <a href="{% url 'login' %}">Fazer Login</a>
+        <a href="{% url 'login' %}"><button>Fazer Login</button></a>
+        <a href="{% url 'register' %}"><button>Cadastrar</button></a>  <!-- Botão de Cadastro -->
     {% endif %}
 </body>
 </html>

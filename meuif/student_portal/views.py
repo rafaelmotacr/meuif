@@ -2,39 +2,37 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Task
 from .forms import TaskForm, RegisterForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from .models import User 
 
 # Lista todas as Tasks
+
+@login_required
 def task_list(request):
-    return render(request, 'tasks/task_list.html', {})
+    tasks = Task.objects.filter(user=request.user)  # Apenas tarefas do usuário logado
+    return render(request, 'tasks/task_list.html', {"tasks": tasks})
 
 
-# Exibe os detalhes de uma Task específica
-def task_detail(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    return render(request, 'tasks/task_detail.html', {'task': task})
-
-
-# Cria uma nova Task via formulário
-def task_new(request):
+@login_required
+def task_create(request):
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            task.created_date = timezone.now()  # Define a data de criação
+            task.user = request.user  # Atribui o usuário logado
+            task.created_date = timezone.now()
             task.save()
             return redirect('task_detail', pk=task.pk)
     else:
         form = TaskForm()
-    return render(request, 'tasks/task_edit.html', {'form': form})
+    return render(request, 'tasks/task_create.html', {'form': form})
 
 
-# Edita uma Task existente
-
-
+@login_required
 def task_edit(request, pk):
-    task = get_object_or_404(Task, pk=pk)
+    # Garante que o usuário só possa editar suas próprias tarefas
+    task = get_object_or_404(Task, pk=pk, user=request.user)
     if request.method == "POST":
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
@@ -45,7 +43,12 @@ def task_edit(request, pk):
     return render(request, 'tasks/task_edit.html', {'form': form})
 
 
+@login_required
+def task_detail(request, pk):
+    task = get_object_or_404(Task, pk=pk, user=request.user)
+    return render(request, 'tasks/task_detail.html', {'task': task})
 # User
+
 
 def user_new(request):
     if request.method == "POST":
