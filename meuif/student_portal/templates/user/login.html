@@ -30,7 +30,7 @@
             gap: 10px;
             margin-top: 20px;
         }
-        /* Ajuste para que os campos do form fiquem alinhados e mais legíveis */
+    
         form p {
             margin: 0;
             text-align: left;
@@ -85,7 +85,6 @@
     <div class="container">
         <h2>Login</h2>
         
-        <!-- Exibir erros, caso existam -->
         {% if form.errors %}
         <div class="error-box">
             <ul>
@@ -107,7 +106,7 @@
             <button type="submit">Entrar</button>
         </form>
 
-        <!-- Botão de voltar para a Home (caso deseje) -->
+  
         <a class="back-home" href="{% url 'home' %}">Voltar</a>
     </div>
 </body>

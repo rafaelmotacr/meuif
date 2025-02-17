@@ -53,7 +53,7 @@
             display: inline;
         }
 
-        /* MENU FIXO NO CANTO SUPERIOR DIREITO */
+    
         .fixed-menu {
             position: fixed;
             top: 10px;
@@ -66,7 +66,7 @@
         .fixed-menu a {
             display: block;
             margin: 5px 0;
-            color: white; /* Fonte branca para contraste */
+            color: white;
             text-decoration: none;
             font-weight: bold;
             padding: 8px 12px;
@@ -74,10 +74,10 @@
             transition: background 0.3s;
         }
         .fixed-menu a:hover {
-            background: #0056b3; /* Efeito hover */
+            background: #0056b3;
         }
 
-        /* Container separado para a imagem */
+       
         .image-container {
             max-width: 600px;
             background: white;
@@ -86,7 +86,7 @@
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
-        /* Faz a imagem se ajustar ao container */
+
         .image-container img {
             max-width: 100%;
             height: auto;
@@ -98,7 +98,7 @@
 <body>
     
     {% if request.user.is_authenticated %}
-        <!-- Menu fixo no canto superior direito -->
+
         <div class="fixed-menu">
             <a href="{% url 'profile' %}">Perfil</a>
             <a href="{% url 'achievements' %}">Conquistas</a>
@@ -107,7 +107,7 @@
 
     <div class="container">
         {% if request.user.is_authenticated %}
-            <!-- Usuário logado -->
+         
             <h1>Bem-vindo, {{ request.user.username }}!</h1>
             <p>Você está logado como {{ request.user.username }}.</p>
             <ul>
@@ -121,7 +121,7 @@
                 </li>
             </ul>
         {% else %}
-            <!-- Usuário não logado -->
+
             <h1>Bem-vindo, visitante!</h1>
             <p>Você não está logado.</p>
             <a href="{% url 'login' %}">Fazer Login</a>
@@ -129,10 +129,20 @@
         {% endif %}
     </div>
 
-    <!-- Container separado para a imagem -->
+  
     <div class="image-container">
-        <img src="{% static 'assets/logoifba.png' %}" alt="Logo IFBA">
+        <img src="{% static 'logoifba.png' %}" alt="Logo IFBA">
     </div>
+
+    <footer>
+
+        <div>
+            <a href="http://www.djangoproject.com/">
+                <img src="/static/django.gif" alt="Feito com Django">
+            </a>
+        </div>
+
+    </footer>
     
 </body>
 </html>

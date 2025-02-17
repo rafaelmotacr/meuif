@@ -24,14 +24,13 @@
       h2 {
           color: #333;
       }
-      /* Exibição de erros */
       .error-box {
           color: red;
           background: #ffdddd;
           padding: 10px;
           border-radius: 5px;
           margin-bottom: 10px;
-          text-align: left; /* Para alinhar as mensagens à esquerda */
+          text-align: left; 
       }
       form {
           display: flex;
@@ -65,7 +64,6 @@
           background: #0056b3;
       }
 
-      /* Botão de Voltar para Home no padrão estabelecido */
       .back-home {
           display: inline-block;
           margin-top: 15px;
@@ -85,7 +83,7 @@
   <div class="container">
     <h2>Cadastro</h2>
 
-    <!-- Exibe os erros do formulário, se existirem -->
+  
     {% if form.errors %}
       <div class="error-box">
         <ul>
@@ -121,7 +119,7 @@
       <button type="submit">Cadastrar</button>
     </form>
 
-    <!-- Botão para voltar à Home -->
+
     <a class="back-home" href="{% url 'home' %}">Voltar para Home</a>
   </div>
 </body>

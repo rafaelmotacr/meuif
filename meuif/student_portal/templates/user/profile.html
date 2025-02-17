@@ -46,14 +46,13 @@
         <h2 class="text-center">Perfil de {{ user.username }}</h2>
         <hr>
 
-        <!-- Exibir mensagens de sucesso -->
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-success">{{ message }}</div>
             {% endfor %}
         {% endif %}
 
-        <!-- Formulário de Edição -->
+
         <form method="post" class="mb-4">
             {% csrf_token %}
             <div class="mb-3">
@@ -67,12 +66,11 @@
             <button type="submit" class="btn btn-primary btn-sm">Atualizar Perfil</button>
         </form>
 
-        <!-- Estatísticas do Usuário -->
         <div class="alert alert-info">
             <strong>Tarefas Concluídas:</strong> {{ total_completed_tasks }}
         </div>
 
-        <!-- Conquistas do Usuário -->
+
         <h3 class="text-center mt-4">Conquistas Desbloqueadas</h3>
         <ul class="list-group mt-3">
             {% for achievement in achievements %}
@@ -85,7 +83,7 @@
             {% endfor %}
         </ul>
 
-        <!-- Link para Home -->
+
         <div class="text-center mt-4">
             <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">Voltar para Home</a>
         </div>

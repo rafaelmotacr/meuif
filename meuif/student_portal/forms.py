@@ -3,7 +3,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from .models import Task, User
 
-
 class TaskCreateForm(forms.ModelForm):
     due_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
@@ -47,7 +46,6 @@ class RegisterForm(UserCreationForm):
             'password2': {
                 'password_mismatch': "As senhas não coincidem.",
                 'password_too_short': "A senha precisa ter pelo menos 8 caracteres.",
-                # Você pode adicionar outros erros conforme a necessidade
             },
         }
 
