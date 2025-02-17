@@ -19,14 +19,16 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
         }
         h2 {
             color: #333;
         }
-        .filter-buttons {
-            margin: 15px 0;
+        .filter-container, .task-actions-container {
+            position: relative;
+            display: inline-block;
         }
-        .filter-button {
+        .filter-button, .task-actions-button {
             background: #343a40;
             color: #fff;
             text-decoration: none;
@@ -34,13 +36,37 @@
             border-radius: 5px;
             margin: 5px;
             transition: background 0.3s;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
         }
-        .filter-button:hover {
+        .filter-button:hover, .task-actions-button:hover {
             background: #23272b;
+        }
+        .filter-menu, .task-actions-menu {
+            display: none;
+            position: absolute;
+            background: white;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1;
+            min-width: 150px;
+            text-align: left;
+            font-family: Arial, sans-serif;
+        }
+        .filter-menu a, .task-actions-menu a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        .filter-menu a:hover, .task-actions-menu a:hover {
+            background: #f4f4f4;
         }
         .task-list {
             list-style: none;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
         .task-item {
             background: #e9ecef;
@@ -50,6 +76,7 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+            font-family: Arial, sans-serif;
         }
         .task-header {
             display: flex;
@@ -57,50 +84,58 @@
             justify-content: space-between;
             align-items: center;
         }
-        .task-links a {
-            margin-left: 10px;
-            text-decoration: none;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .view-link { background: #007BFF; }
-        .view-link:hover { background: #0056b3; }
-        .edit-link { background: #28a745; }
-        .edit-link:hover { background: #1e7e34; }
-        .complete-link { background: #ffc107; color: #000; }
-        .complete-link:hover { background: #e0a800; }
-        .delete-link { background: #dc3545; }
-        .delete-link:hover { background: #bd2130; }
-        .new-task, .back-home {
-            display: inline-block;
-            margin-top: 10px;
-            text-decoration: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .new-task { background: #6c757d; }
-        .new-task:hover { background: #545b62; }
-        .back-home { background: #17a2b8; margin-left: 10px; }
-        .back-home:hover { background: #117a8b; }
         .task-status {
             margin-top: 5px;
             font-style: italic;
             color: #666;
+            font-family: Arial, sans-serif;
+        }
+        .new-task, .back-home {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+            font-family: Arial, sans-serif;
+        }
+        .new-task {
+            background: #17a2b8;
+        }
+        .new-task:hover {
+            background: #117a8b;
+            transform: scale(1.05);
+        }
+        .back-home {
+            background: #17a2b8;
+            margin-left: 10px;
+        }
+        .back-home:hover {
+            background: #117a8b;
+            transform: scale(1.05);
         }
     </style>
+    <script>
+        function toggleMenu(menuId) {
+            var menu = document.getElementById(menuId);
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h2>Lista de Tasks</h2>
-        <div class="filter-buttons">
-            <a href="?status=todo" class="filter-button">Por Fazer</a>
-            <a href="?status=overdue" class="filter-button">Atrasadas</a>
-            <a href="?status=done" class="filter-button">Concluídas</a>
-            <a href="?" class="filter-button">Todas</a>
+        <div class="filter-container">
+            <button class="filter-button" onclick="toggleMenu('filter-menu')">Filtrar por</button>
+            <div id="filter-menu" class="filter-menu">
+                <a href="?status=todo">Por Fazer</a>
+                <a href="?status=overdue">Atrasadas</a>
+                <a href="?status=done">Concluídas</a>
+                <a href="?">Todas</a>
+            </div>
         </div>
         <ul class="task-list">
             {% for task in tasks %}
@@ -112,14 +147,17 @@
                             - Vence em: {{ task.due_date }}
                         {% endif %}
                     </span>
-                    <span class="task-links">
-                        <a class="view-link" href="{% url 'task_detail' task.pk %}">Ver</a>
-                        <a class="edit-link" href="{% url 'task_edit' task.pk %}">Editar</a>
-                        {% if not task.completed %}
-                            <a class="complete-link" href="{% url 'task_mark_done' task.pk %}">Concluir</a>
-                        {% endif %}
-                        <a class="delete-link" href="{% url 'task_delete' task.pk %}">Apagar</a>
-                    </span>
+                    <div class="task-actions-container">
+                        <button class="task-actions-button" onclick="toggleMenu('task-actions-menu-{{ task.pk }}')">Ações</button>
+                        <div id="task-actions-menu-{{ task.pk }}" class="task-actions-menu">
+                            <a href="{% url 'task_detail' task.pk %}">Ver</a>
+                            <a href="{% url 'task_edit' task.pk %}">Editar</a>
+                            {% if not task.completed %}
+                                <a href="{% url 'task_mark_done' task.pk %}">Concluir</a>
+                            {% endif %}
+                            <a href="{% url 'task_delete' task.pk %}">Apagar</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="task-status">
                     <strong>Status:</strong> {% if task.completed %} Concluída {% else %} Pendente {% endif %}
