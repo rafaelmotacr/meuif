@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h2 class="text-center">Perfil de {{ user.username }}</h2>
+        <hr>
+
+        <!-- Formulário de Edição -->
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                {{ form.name }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">E-mail</label>
+                {{ form.email }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Atualizar Perfil</button>
+        </form>
+
+        <!-- Estatísticas do Usuário -->
+        <div class="alert alert-info text-center">
+            <strong>Tarefas Concluídas:</strong> {{ total_completed_tasks }}
+        </div>
+
+        <!-- Conquistas do Usuário -->
+        <h3 class="text-center mt-4">Conquistas Desbloqueadas</h3>
+        <ul class="list-group mt-3">
+            {% for achievement in achievements %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ achievement.achievement.name }}</span>
+                    <small class="text-muted">{{ achievement.achievement.description }}</small>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted text-center">Nenhuma conquista desbloqueada ainda.</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Link para Home -->
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">Voltar para Home</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

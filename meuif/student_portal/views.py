@@ -1,75 +1,138 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from .models import Task
-from .forms import TaskForm, RegisterForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import User 
+from .models import Task, User, Achievement, UserAchievement
+from .forms import TaskCreateForm, TaskEditForm, RegisterForm, UserProfileForm
 
-# Lista todas as Tasks
-
+# List all tasks
 @login_required
 def task_list(request):
-    tasks = Task.objects.filter(user=request.user)  # Apenas tarefas do usuário logado
+    filter_status = request.GET.get('status')
+    tasks = Task.objects.filter(user=request.user)
+    now = timezone.now()
+
+    # Apply filters based on status
+    if filter_status == 'todo':
+        tasks = tasks.filter(completed=False, due_date__gt=now)
+    elif filter_status == 'overdue':
+        tasks = tasks.filter(completed=False, due_date__lte=now)
+    elif filter_status == 'done':
+        tasks = tasks.filter(completed=True)
+
     return render(request, 'tasks/task_list.html', {"tasks": tasks})
 
 
+# Delete a task
+@login_required
+def task_delete(request, pk):
+    task = get_object_or_404(Task, pk=pk, user=request.user)
+    
+    if request.method == "POST":
+        task.delete()
+        return redirect('task_list')
+
+    return render(request, 'tasks/task_confirm_delete.html', {'task': task})
+
+
+# Create a new task
 @login_required
 def task_create(request):
     if request.method == "POST":
-        form = TaskForm(request.POST)
+        form = TaskCreateForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            task.user = request.user  # Atribui o usuário logado
+            task.user = request.user
             task.created_date = timezone.now()
             task.save()
             return redirect('task_detail', pk=task.pk)
     else:
-        form = TaskForm()
+        form = TaskCreateForm()
+    
     return render(request, 'tasks/task_create.html', {'form': form})
 
 
+# Mark a task as done
+@login_required
+def task_mark_done(request, pk):
+    task = get_object_or_404(Task, pk=pk, user=request.user)
+    task.completed = True
+    task.completed_at = timezone.now()
+    task.save()
+    return redirect('task_list')
+
+
+# Edit an existing task
 @login_required
 def task_edit(request, pk):
-    # Garante que o usuário só possa editar suas próprias tarefas
     task = get_object_or_404(Task, pk=pk, user=request.user)
+    
     if request.method == "POST":
-        form = TaskForm(request.POST, instance=task)
+        form = TaskEditForm(request.POST, instance=task)
         if form.is_valid():
-            task = form.save()
+            form.save()
             return redirect('task_detail', pk=task.pk)
     else:
-        form = TaskForm(instance=task)
+        form = TaskEditForm(instance=task)
+    
     return render(request, 'tasks/task_edit.html', {'form': form})
 
 
+# View task details
 @login_required
 def task_detail(request, pk):
     task = get_object_or_404(Task, pk=pk, user=request.user)
     return render(request, 'tasks/task_detail.html', {'task': task})
-# User
 
 
+# Register a new user
 def user_new(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()  # Salva corretamente o usuário
-            login(request, user)  # Faz login automático
-            return redirect("task_list")  
-        else:
-            print("Erro no formulário:", form.errors)  # Depuração no terminal
-
+            user = form.save()
+            login(request, user)
+            return redirect("task_list")
     else:
         form = RegisterForm()
     
-    return render(request, "user/register.html", {"form": form})  # Ajuste conforme necessário
+    return render(request, "user/register.html", {"form": form})
 
 
+# List all users
 def user_list(request):
-    users = User.objects.all()  # Obtém todos os usuários cadastrados
-    return render(request, 'user/user_list.html', {"users": users})  # Passa para o template
+    users = User.objects.all()
+    return render(request, 'user/user_list.html', {"users": users})
 
 
+# User profile view
+@login_required
+def profile(request):
+    user = request.user
+    achievements = UserAchievement.objects.filter(user=user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = UserProfileForm(instance=user)
+
+    return render(request, 'user/profile.html', {'form': form, 'achievements': achievements})
+
+
+# Home page
 def home(request):
     return render(request, "home/index.html")
+
+
+# Achievements view
+def achievements_view(request):
+    all_achievements = Achievement.objects.all()
+    user_achievements = UserAchievement.objects.filter(user=request.user).values_list('achievement', flat=True)
+
+    return render(request, 'user/achievements.html', {
+        'achievements': all_achievements,
+        'user_achievements': user_achievements
+    })

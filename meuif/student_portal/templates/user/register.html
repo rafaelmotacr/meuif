@@ -1,50 +1,128 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          text-align: center;
+          margin: 0;
+          padding: 0;
+      }
+      .container {
+          max-width: 400px;
+          background: white;
+          margin: 50px auto;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+          color: #333;
+      }
+      /* Exibição de erros */
+      .error-box {
+          color: red;
+          background: #ffdddd;
+          padding: 10px;
+          border-radius: 5px;
+          margin-bottom: 10px;
+          text-align: left; /* Para alinhar as mensagens à esquerda */
+      }
+      form {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          margin-top: 20px;
+      }
+      label {
+          font-weight: bold;
+          text-align: left;
+          margin-bottom: 5px;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+      }
+      button {
+          padding: 10px;
+          background: #007BFF;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background 0.3s;
+      }
+      button:hover {
+          background: #0056b3;
+      }
+
+      /* Botão de Voltar para Home no padrão estabelecido */
+      .back-home {
+          display: inline-block;
+          margin-top: 15px;
+          text-decoration: none;
+          color: white;
+          background: #6c757d;
+          padding: 10px 20px;
+          border-radius: 5px;
+          transition: background 0.3s;
+      }
+      .back-home:hover {
+          background: #545b62;
+      }
+  </style>
 </head>
 <body>
-  <h2>Cadastro</h2>
+  <div class="container">
+    <h2>Cadastro</h2>
 
-  <!-- Exibe os erros do formulário, se existirem -->
-  {% if form.errors %}
-    <div style="color: red;">
-      <ul>
-        {% for field, errors in form.errors.items %}
-          <li>
-            <strong>{{ field|capfirst }}:</strong>
-            <ul>
-              {% for error in errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+    <!-- Exibe os erros do formulário, se existirem -->
+    {% if form.errors %}
+      <div class="error-box">
+        <ul>
+          {% for field, errors in form.errors.items %}
+            <li>
+              <strong>{{ field|capfirst }}:</strong>
+              <ul>
+                {% for error in errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
-  <form method="POST">
-    {% csrf_token %}
-    
-    <label for="id_username">Usuário</label>
-    {{ form.username }}
-    <br>
-    
-    <label for="id_email">E-mail</label>
-    {{ form.email }}
-    <br>
-    
-    <label for="id_password1">Senha</label>
-    <input type="password" name="password1" id="id_password1" required>
-    <br>
-    
-    <label for="id_password2">Confirme a Senha</label>
-    <input type="password" name="password2" id="id_password2" required>
-    <br>
-    
-    <button type="submit">Cadastrar</button>
-  </form>
+    <form method="POST">
+      {% csrf_token %}
+      
+      <label for="id_username">Usuário</label>
+      {{ form.username }}
+      
+      <label for="id_email">E-mail</label>
+      {{ form.email }}
+      
+      <label for="id_password1">Senha</label>
+      <input type="password" name="password1" id="id_password1" required>
+      
+      <label for="id_password2">Confirme a Senha</label>
+      <input type="password" name="password2" id="id_password2" required>
+      
+      <button type="submit">Cadastrar</button>
+    </form>
+
+    <!-- Botão para voltar à Home -->
+    <a class="back-home" href="{% url 'home' %}">Voltar para Home</a>
+  </div>
 </body>
 </html>

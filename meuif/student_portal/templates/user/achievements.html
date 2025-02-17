@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conquistas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h2 class="text-center">Conquistas Disponíveis</h2>
+        <hr>
+
+        <ul class="list-group">
+            {% for achievement in achievements %}
+                <li class="list-group-item d-flex justify-content-between align-items-center 
+                    {% if achievement in user_achievements %} list-group-item-success {% endif %}">
+                    <div>
+                        <strong>{{ achievement.name }}</strong>
+                        <p class="mb-0 text-muted">{{ achievement.description }}</p>
+                    </div>
+                    {% if achievement in user_achievements %}
+                        <span class="badge bg-success">Desbloqueada</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Bloqueada</span>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted text-center">Nenhuma conquista cadastrada.</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Botão para voltar à Home -->
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">Voltar para Home</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

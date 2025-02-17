@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Exclusão</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            background: white;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        .task-name {
+            font-weight: bold;
+            color: #d9534f;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .delete-button, .cancel-button {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .delete-button {
+            background: #d9534f;
+        }
+        .delete-button:hover {
+            background: #c9302c;
+        }
+        .cancel-button {
+            background: #6c757d;
+            margin-left: 10px;
+        }
+        .cancel-button:hover {
+            background: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Confirmar Exclusão</h2>
+        <p>Tem certeza de que deseja excluir a task <span class="task-name">"{{ task.title }}"</span>?</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="buttons">
+                <button type="submit" class="delete-button">Excluir</button>
+                <a href="{% url 'task_list' %}" class="cancel-button">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
