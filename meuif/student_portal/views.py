@@ -3,7 +3,8 @@ from django.utils import timezone
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .models import Task, User, Achievement, UserAchievement
-from .forms import TaskCreateForm, TaskEditForm, RegisterForm, UserProfileForm
+from .forms import *
+from django.contrib import messages
 
 # List all tasks
 @login_required
@@ -99,27 +100,28 @@ def user_new(request):
     return render(request, "user/register.html", {"form": form})
 
 
-# List all users
-def user_list(request):
-    users = User.objects.all()
-    return render(request, 'user/user_list.html', {"users": users})
-
-
 # User profile view
-@login_required
-def profile(request):
-    user = request.user
-    achievements = UserAchievement.objects.filter(user=user)
 
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user)
+@login_required
+def profile_view(request):
+    user = request.user
+
+    if request.method == "POST":
+        form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            messages.success(request, "Perfil atualizado com sucesso!")
+            return redirect("profile")  # Certifique-se de que "profile" é o nome correto da URL
     else:
-        form = UserProfileForm(instance=user)
+        form = UserUpdateForm(instance=user)
 
-    return render(request, 'user/profile.html', {'form': form, 'achievements': achievements})
+    total_completed_tasks = user.completed_tasks_count()
+
+    return render(request, 'user/profile.html', {
+        'user': user,
+        'form': form,
+        'total_completed_tasks': total_completed_tasks
+    })
 
 
 # Home page

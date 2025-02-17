@@ -13,14 +13,13 @@ urlpatterns = [
     path('user/tasks/<int:pk>/', task_detail, name='task_detail'),
     path('user/tasks/<int:pk>/edit/', task_edit, name='task_edit'),
     path('user/tasks/<int:pk>/done/', task_mark_done, name='task_mark_done'),
-    path('user/profile/', profile, name='profile'),
+    path('user/profile/', profile_view, name='profile'),
     path('usertask/<int:pk>/delete/', task_delete, name='task_delete'),
     path('user/achievments', achievements_view, name='achievements'),
 
 
     # Usuário
     path("user/register/", user_new, name="register"),
-    path("user/list/", user_list, name="user_list"),
 
     # Login e Logout
     path("login/", auth_views.LoginView.as_view(template_name="user/login.html"), name="login"),

@@ -8,11 +8,16 @@ class User(AbstractUser):
     email = models.CharField(max_length=128)
     password = models.CharField(max_length=128)
 
+    def completed_tasks_count(self):
+        """Retorna a quantidade de tarefas concluídas pelo usuário."""
+        return self.tasks.filter(completed=True).count()
+
     def __str__(self):
         return self.username
+    
 
 class Task(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="tasks")
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     due_date = models.DateField()

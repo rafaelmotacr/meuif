@@ -51,9 +51,13 @@ class RegisterForm(UserCreationForm):
             },
         }
 
-class UserProfileForm(UserChangeForm):
-    password = None  # Para não exibir o campo de senha
 
+class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['name', 'email']
+        fields = ["name", "email"]
+
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+        }
