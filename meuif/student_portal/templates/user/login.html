@@ -99,7 +99,19 @@
         
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            {% for field in form %}
+                <p>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <span class="error-box">
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </span>
+                    {% endif %}
+                </p>
+            {% endfor %}
             <button type="submit">Entrar</button>
         </form>
 
